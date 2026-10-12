@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hero Hutan Pinus</title>
+<style>
+:root{--ink:#f4f8f1;--accent:#c9e7b0;color-scheme:dark}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){color-scheme:dark}}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#1d3a2c;color:var(--ink)}
+.hero{position:relative;min-height:520px;height:min(100svh,820px);overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+#bg{position:absolute;left:-40px;top:-40px;width:calc(100% + 80px);height:calc(100% + 80px);filter:blur(10px);z-index:0}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,35,25,.25),rgba(15,35,25,.65));z-index:1}
+.content{position:relative;z-index:3;max-width:680px}
+.eyebrow{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(40px,8vw,84px);font-weight:700;line-height:1.05;margin:12px 0 16px}
+.lead{font-size:clamp(16px,2vw,19px);line-height:1.6;color:#e4efdf;max-width:520px;margin:0 auto 32px}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{font:inherit;font-weight:600;font-size:15px;padding:14px 26px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:var(--accent);color:#17321f}
+.btn.ghost{background:transparent;color:var(--ink);border-color:rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+<section class="hero">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Hero hutan pinus dengan latar blur dan animasi</h2>
+  <canvas id="bg"></canvas>
+  <div class="shade"></div>
+  <div class="content">
+    <p class="eyebrow">Jelajahi alam</p>
+    <h1>Hutan Pinus</h1>
+    <p class="lead">Udara sejuk, aroma resin, dan cahaya lembut menembus sela-sela pepohonan tinggi yang menjulang.</p>
+    <div class="actions">
+      <button class="btn primary">Mulai menjelajah</button>
+      <button class="btn ghost">Pelajari lebih lanjut</button>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+const hero=document.querySelector('.hero');
+const cv=document.getElementById('bg');
+const ctx=cv.getContext('2d');
+const LAYERS=[
+  {n:16,hs:[.22,.34],by:[.74,.8],col:'#a9cdb8',sway:.008,fog:.5},
+  {n:10,hs:[.36,.52],by:[.82,.88],col:'#5d937a',sway:.016,fog:.2},
+  {n:6,hs:[.55,.72],by:[.92,.98],col:'#1f5b3e',sway:.028,fog:0}
+];
+let W=0,H=0,dpr=1,trees=[];
+const rnd=(a,b)=>a+Math.random()*(b-a);
+
+function resize(){
+  dpr=Math.min(window.devicePixelRatio||1,2);
+  W=hero.clientWidth+80;
+  H=hero.clientHeight+80;
+  cv.width=W*dpr;cv.height=H*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  buildTrees();
+}
+
+function buildTrees(){
+  trees=[];
+  LAYERS.forEach((l,li)=>{
+    for(let i=0;i<l.n;i++){
+      trees.push({
+        li,
+        x:(i/(l.n-1))*W*1.1-W*.05+rnd(-12,12),
+        by:H*rnd(l.by[0],l.by[1]),
+        h:H*rnd(l.hs[0],l.hs[1]),
+        ph:rnd(0,6.3)
+      });
+    }
+  });
+}
+
+function drawPine(tr,t){
+  const L=LAYERS[tr.li];
+  const ang=Math.sin(t*1.2+tr.ph)*L.sway+Math.sin(t*.5+tr.ph*2)*L.sway*.4;
+  const h=tr.h,hw0=h*.22;
+  ctx.save();
+  ctx.translate(tr.x,tr.by);
+  ctx.rotate(ang);
+  ctx.fillStyle=L.col;
+  ctx.fillRect(-h*.012,-h*.2,h*.024,h*.2);
+  for(let i=0;i<5;i++){
+    const yb=-h*(.3+.14*i),hw=hw0-h*.035*i,yt=yb-h*.22;
+    ctx.beginPath();
+    ctx.moveTo(0,yt);
+    ctx.quadraticCurveTo(hw*.7,yt+h*.1,hw,yb);
+    ctx.quadraticCurveTo(0,yb-h*.05,-hw,yb);
+    ctx.quadraticCurveTo(-hw*.7,yt+h*.1,0,yt);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function render(time){
+  const t=time;
+  const sky=ctx.createLinearGradient(0,0,0,H);
+  sky.addColorStop(0,'#e8f4ec');
+  sky.addColorStop(1,'#f7f3e3');
+  ctx.fillStyle=sky;
+  ctx.fillRect(0,0,W,H);
+  LAYERS.forEach((l,li)=>{
+    trees.filter(tr=>tr.li===li).forEach(tr=>drawPine(tr,t));
+    if(l.fog){
+      const g=ctx.createLinearGradient(0,H*.5,0,H);
+      g.addColorStop(0,'rgba(240,247,240,0)');
+      g.addColorStop(1,'rgba(240,247,240,'+l.fog+')');
+      ctx.fillStyle=g;
+      ctx.fillRect(0,H*.5,W,H*.5);
+    }
+  });
+  ctx.fillStyle='#6b5a3c';
+  ctx.fillRect(0,H*.94,W,H*.06);
+  for(let i=0;i<3;i++){
+    const x=W*(.2+.3*i)+Math.sin(t*.3+i)*30;
+    const a=.05+.03*Math.sin(t*.8+i*2);
+    ctx.fillStyle='rgba(255,247,214,'+a+')';
+    ctx.beginPath();
+    ctx.moveTo(x,0);ctx.lineTo(x+60,0);ctx.lineTo(x+260,H);ctx.lineTo(x+160,H);
+    ctx.closePath();ctx.fill();
+  }
+}
+
+resize();
+new ResizeObserver(resize).observe(hero);
+gsap.ticker.add(render);
+gsap.from(cv,{opacity:0,scale:1.12,duration:2.2,ease:'power2.out'});
+gsap.from('.content > *',{y:30,opacity:0,stagger:.12,duration:1,ease:'power3.out',delay:.3});
+</script>
+</body>
+</html>
