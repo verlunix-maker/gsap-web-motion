@@ -11,7 +11,7 @@ html,body{height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#070b18;color:var(--ink)}
 .hero{position:relative;min-height:560px;height:min(100svh,840px);overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
 #bg{position:absolute;left:-40px;top:-40px;width:calc(100% + 80px);height:calc(100% + 80px);filter:blur(5px);z-index:0}
-.shade{radial-gradient(ellipse at 50% 30%,rgba(157,123,255,.12),transparent 60%),linear-gradient(180deg,rgba(7,11,24,.02),rgba(7,11,24,.5))}
+.shade{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 50% 30%,rgba(157,123,255,.12),transparent 60%),linear-gradient(180deg,rgba(7,11,24,.02),rgba(7,11,24,.5))}
 .content{position:relative;z-index:3;max-width:760px}
 .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);border:1px solid rgba(255,210,122,.35);padding:7px 14px;border-radius:999px;background:rgba(255,210,122,.06)}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--warm)}
