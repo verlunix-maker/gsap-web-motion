@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tombol GSAP</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f5f7fb;color:#111827;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.wrap{text-align:center}
+h1{font-size:clamp(28px,5vw,40px);margin-bottom:8px}
+.wrap>p{color:#4b5563;margin-bottom:32px}
+.row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;align-items:center}
+.btn{position:relative;overflow:hidden;min-width:200px;padding:14px 28px;border:0;border-radius:12px;background:#2563eb;color:#fff;font:inherit;font-weight:600;font-size:15px;cursor:pointer;transition:box-shadow .3s}
+.btn:hover{box-shadow:0 10px 30px rgba(37,99,235,.35)}
+.btn:focus-visible{outline:3px solid #93c5fd;outline-offset:3px}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);pointer-events:none;transform:translate(-50%,-50%)}
+.loading-btn{display:inline-flex;align-items:center;justify-content:center;min-width:200px;height:52px}
+.loading-btn .label{transition:none}
+.spinner,.check{position:absolute;width:22px;height:22px;opacity:0;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.spinner circle{stroke-dasharray:45 100}
+.check path{stroke-dasharray:30;stroke-dashoffset:0}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Tombol GSAP</h1>
+  <p>Coba hover, klik, dan tombol kirim.</p>
+  <div class="row">
+    <button class="btn magnetic"><span class="label">Efek magnet</span></button>
+    <button class="btn">Klik untuk ripple</button>
+    <button class="btn loading-btn" id="submitBtn">
+      <span class="label">Kirim</span>
+      <svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>
+      <svg class="check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+    </button>
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+document.querySelectorAll('.btn').forEach(btn=>{
+  btn.addEventListener('pointerdown',()=>gsap.to(btn,{scale:.96,duration:.15}));
+  btn.addEventListener('pointerup',()=>gsap.to(btn,{scale:1,duration:.3,ease:'back.out(2)'}));
+  btn.addEventListener('pointerleave',()=>gsap.to(btn,{scale:1,duration:.2}));
+  btn.addEventListener('click',e=>{
+    if(btn.id==='submitBtn'||reduce)return;
+    const r=btn.getBoundingClientRect();
+    const s=document.createElement('span');
+    s.className='ripple';
+    s.style.left=(e.clientX-r.left)+'px';
+    s.style.top=(e.clientY-r.top)+'px';
+    btn.appendChild(s);
+    const size=Math.max(r.width,r.height)*2.4;
+    gsap.fromTo(s,{width:0,height:0,opacity:.7},{width:size,height:size,opacity:0,duration:.7,ease:'power2.out',onComplete:()=>s.remove()});
+  });
+});
+
+const mag=document.querySelector('.magnetic');
+const xTo=gsap.quickTo(mag,'x',{duration:.4,ease:'power3'});
+const yTo=gsap.quickTo(mag,'y',{duration:.4,ease:'power3'});
+if(!reduce){
+  mag.addEventListener('pointermove',e=>{
+    const r=mag.getBoundingClientRect();
+    xTo((e.clientX-r.left-r.width/2)*.25);
+    yTo((e.clientY-r.top-r.height/2)*.25);
+  });
+  mag.addEventListener('pointerleave',()=>{xTo(0);yTo(0);});
+}
+
+const sb=document.getElementById('submitBtn');
+const lbl=sb.querySelector('.label'),sp=sb.querySelector('.spinner'),ck=sb.querySelector('.check');
+gsap.set(sp,{transformOrigin:'50% 50%'});
+let busy=false;
+sb.addEventListener('click',()=>{
+  if(busy)return;
+  busy=true;
+  const dur=reduce?0:1;
+  gsap.timeline({onComplete:()=>{busy=false;}})
+    .to(lbl,{opacity:0,duration:.2*dur})
+    .to(sp,{opacity:1,duration:.2*dur},'<')
+    .to(sp,{rotation:360,duration:.7*dur,ease:'none',repeat:2},'<')
+    .to(sp,{opacity:0,duration:.2*dur})
+    .to(ck,{opacity:1,duration:.2*dur},'<')
+    .fromTo(ck.querySelector('path'),{strokeDashoffset:30},{strokeDashoffset:0,duration:.4*dur},'<')
+    .to({},{duration:1.2*dur})
+    .to(ck,{opacity:0,duration:.2*dur})
+    .to(lbl,{opacity:1,duration:.2*dur},'<');
+});
+</script>
+</body>
+</html>

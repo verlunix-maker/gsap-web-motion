@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Komponen GSAP</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f5f7fb;color:#111827}
+.nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:#fff;border-bottom:1px solid #e5e7eb}
+.logo{font-weight:700;font-size:18px}
+.nav nav{position:relative;display:flex;gap:24px}
+.nav nav a{color:#374151;text-decoration:none;font-size:15px;padding:6px 0}
+.indicator{position:absolute;bottom:-4px;left:0;height:2px;width:0;background:#2563eb;border-radius:2px}
+.page{max-width:960px;margin:0 auto;padding:48px 24px}
+h2{font-size:24px;margin:48px 0 20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 16px rgba(17,24,39,.06);transform-style:preserve-3d;will-change:transform}
+.card h3{margin-bottom:8px}
+.card p{color:#4b5563;line-height:1.6;font-size:15px}
+.accordion .item{background:#fff;border-radius:12px;margin-bottom:12px;overflow:hidden;border:1px solid #e5e7eb}
+.accordion .q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border:0;background:none;font:inherit;font-weight:600;font-size:16px;cursor:pointer;text-align:left}
+.accordion .q span{font-size:22px;line-height:1}
+.accordion .a{height:0;overflow:hidden}
+.accordion .a p{padding:0 20px 18px;color:#4b5563;line-height:1.6}
+.btn{padding:12px 22px;border:0;border-radius:10px;background:#2563eb;color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.overlay{position:fixed;inset:0;background:rgba(17,24,39,.5);display:none;align-items:center;justify-content:center;padding:24px;z-index:20}
+.modal{background:#fff;border-radius:16px;padding:28px;max-width:420px;width:100%}
+.modal h3{margin-bottom:8px}
+.modal p{color:#4b5563;line-height:1.6;margin-bottom:20px}
+.btn.ghost{background:#eef2ff;color:#1e3a8a}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="logo">Brand</div>
+  <nav>
+    <a href="#">Beranda</a><a href="#">Fitur</a><a href="#">Harga</a><a href="#">Kontak</a>
+    <span class="indicator"></span>
+  </nav>
+</header>
+
+<main class="page">
+  <h2>Kartu</h2>
+  <section class="cards">
+    <article class="card"><h3>Cepat</h3><p>Animasi ringan memakai transform dan opacity.</p></article>
+    <article class="card"><h3>Responsif</h3><p>Layout menyesuaikan lebar layar dengan otomatis.</p></article>
+    <article class="card"><h3>Mudah diubah</h3><p>Ganti warna dan teks sesuai desain Anda.</p></article>
+  </section>
+
+  <h2>Akordion</h2>
+  <section class="accordion">
+    <div class="item"><button class="q">Apa itu GSAP?<span>+</span></button><div class="a"><p>GSAP adalah library animasi JavaScript untuk membuat animasi yang halus dan terkendali.</p></div></div>
+    <div class="item"><button class="q">Apakah gratis?<span>+</span></button><div class="a"><p>GSAP memiliki versi gratis untuk sebagian besar penggunaan. Periksa lisensinya di dokumentasi resmi.</p></div></div>
+    <div class="item"><button class="q">Bagaimana cara memakainya?<span>+</span></button><div class="a"><p>Muat library dari CDN lalu panggil gsap.to, gsap.from, atau gsap.timeline.</p></div></div>
+  </section>
+
+  <h2>Modal</h2>
+  <button class="btn" id="openModal">Buka modal</button>
+</main>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>Konfirmasi tindakan</h3>
+    <p>Modal ini muncul dengan transisi skala dan fade. Klik di luar atau tombol tutup untuk menutupnya.</p>
+    <button class="btn ghost" id="closeModal">Tutup</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const dur=reduce?0:1;
+
+const indicator=document.querySelector('.indicator');
+const links=document.querySelectorAll('.nav nav a');
+function moveIndicator(link){
+  gsap.to(indicator,{x:link.offsetLeft,width:link.offsetWidth,duration:.4*dur,ease:'power3.out'});
+}
+links.forEach(a=>{
+  a.addEventListener('mouseenter',()=>moveIndicator(a));
+  a.addEventListener('focus',()=>moveIndicator(a));
+});
+document.querySelector('.nav nav').addEventListener('mouseleave',()=>moveIndicator(links[0]));
+moveIndicator(links[0]);
+
+gsap.from('.card',{y:40,opacity:0,stagger:.12,duration:.8*dur,ease:'power3.out',delay:.2});
+
+if(!reduce){
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('pointermove',e=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+      gsap.to(card,{rotationY:px*12,rotationX:-py*12,transformPerspective:700,duration:.4,ease:'power2.out'});
+    });
+    card.addEventListener('pointerleave',()=>gsap.to(card,{rotationX:0,rotationY:0,duration:.6,ease:'elastic.out(1,.5)'}));
+  });
+}
+
+document.querySelectorAll('.accordion .q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement,panel=item.querySelector('.a'),icon=q.querySelector('span');
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.accordion .item.open').forEach(o=>{
+      if(o!==item){
+        o.classList.remove('open');
+        gsap.to(o.querySelector('.a'),{height:0,duration:.4*dur,ease:'power2.inOut'});
+        gsap.to(o.querySelector('.q span'),{rotation:0,duration:.3*dur});
+      }
+    });
+    item.classList.toggle('open',!isOpen);
+    gsap.to(panel,{height:isOpen?0:panel.scrollHeight,duration:.4*dur,ease:'power2.inOut'});
+    gsap.to(icon,{rotation:isOpen?0:45,duration:.3*dur});
+  });
+});
+
+const overlay=document.getElementById('overlay');
+const modal=overlay.querySelector('.modal');
+function openModal(){
+  overlay.style.display='flex';
+  gsap.fromTo(overlay,{opacity:0},{opacity:1,duration:.25*dur});
+  gsap.fromTo(modal,{scale:.9,y:20,opacity:0},{scale:1,y:0,opacity:1,duration:.4*dur,ease:'back.out(1.6)'});
+}
+function closeModal(){
+  gsap.to(modal,{scale:.95,y:10,opacity:0,duration:.25*dur,ease:'power2.in'});
+  gsap.to(overlay,{opacity:0,duration:.25*dur,onComplete:()=>{overlay.style.display='none';}});
+}
+document.getElementById('openModal').addEventListener('click',openModal);
+document.getElementById('closeModal').addEventListener('click',closeModal);
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal();});
+</script>
+</body>
+</html>
