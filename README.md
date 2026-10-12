@@ -6,25 +6,31 @@ Koleksi animasi GSAP siap pakai untuk membuat website lebih hidup. Setiap contoh
 
 Setiap contoh bisa dilihat langsung di browser:
 
-| Contoh | Demo |
-|--------|------|
-| Hero hutan pinus dengan latar blur | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-hutan-pinus.html) |
-| Hero high-tech dengan latar blur | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-high-tech.html) |
+| Kategori | Contoh | Demo |
+|----------|--------|------|
+| Hero | Hero hutan pinus dengan latar blur | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-hutan-pinus.html) |
+| Hero | Hero high-tech dengan latar blur | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-high-tech.html) |
+| Latar | Latar hutan pinus animasi (canvas + GSAP) | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/background/background-hutan-pinus.html) |
+| Aksen | Ranting dan daun pinus melayang | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/accents/aksen-ranting-pinus.html) |
+| Tombol | Efek magnet, ripple, dan tombol loading | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/buttons/tombol-gsap.html) |
+| Komponen | Navbar, kartu, akordion, dan modal | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/components/komponen-navbar-kartu.html) |
+| Teks | Teks per huruf, kata berganti, dan teks per kata | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/text/teks-per-huruf.html) |
+| Scroll | Muncul saat terlihat, paralaks, dan bagian yang tertahan | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/scroll/scroll-reveal.html) |
 
 > Tautan demo bekerja setelah GitHub Pages diaktifkan (lihat bagian "Menampilkan demo di GitHub Pages" di bawah).
 
 ## Daftar animasi
 
-| Kategori | Contoh                                    | Status   |
-|----------|-------------------------------------------|----------|
-| Hero     | Hero hutan pinus dengan latar blur        | Tersedia |
-| Hero     | Hero high-tech dengan latar blur          | Tersedia |
-| Latar    | Latar hutan pinus animasi (canvas + GSAP) | Rencana  |
-| Aksen    | Ranting dan daun pinus melayang           | Rencana  |
-| Tombol   | Tombol hover, klik, dan loading           | Rencana  |
-| Komponen | Kartu, navbar, accordion, modal           | Rencana  |
-| Teks     | Teks muncul per huruf dan per kata        | Rencana  |
-| Scroll   | Animasi saat elemen masuk layar           | Rencana  |
+| Kategori | Contoh | Status |
+|----------|--------|--------|
+| Hero | Hero hutan pinus dengan latar blur | Tersedia |
+| Hero | Hero high-tech dengan latar blur | Tersedia |
+| Latar | Latar hutan pinus animasi (canvas + GSAP) | Tersedia |
+| Aksen | Ranting dan daun pinus melayang | Tersedia |
+| Tombol | Efek magnet, ripple, dan tombol loading | Tersedia |
+| Komponen | Navbar, kartu, akordion, dan modal | Tersedia |
+| Teks | Teks per huruf, kata berganti, dan teks per kata | Tersedia |
+| Scroll | Muncul saat terlihat, paralaks, dan bagian yang tertahan | Tersedia |
 
 ## Struktur folder
 
@@ -34,11 +40,17 @@ gsap-web-motion/
 │   ├── hero-hutan-pinus.html
 │   └── hero-high-tech.html
 ├── background/
+│   └── background-hutan-pinus.html
 ├── accents/
+│   └── aksen-ranting-pinus.html
 ├── buttons/
+│   └── tombol-gsap.html
 ├── components/
+│   └── komponen-navbar-kartu.html
 ├── text/
+│   └── teks-per-huruf.html
 ├── scroll/
+│   └── scroll-reveal.html
 ├── LICENSE
 └── README.md
 ```
@@ -59,11 +71,17 @@ Tidak ada instalasi tambahan. GSAP dimuat dari CDN:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 ```
 
+Contoh scroll juga memuat plugin ScrollTrigger:
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+```
+
 ## Cara memakai di proyek Anda
 
 1. Salin bagian HTML, CSS, atau JavaScript yang Anda butuhkan.
 2. Pastikan library GSAP sudah dimuat sebelum script animasi.
-3. Sesuaikan warna, teks, dan durasi dengan desain Anda. Nilai yang bisa diubah biasanya ada di bagian atas script atau di blok `:root` pada CSS.
+3. Sesuaikan warna, teks, dan durasi dengan desain Anda. Nilai yang bisa diubah biasanya ada di bagian atas script atau di blok CSS.
 
 ## Menampilkan demo di GitHub Pages
 
@@ -77,7 +95,7 @@ Tidak ada instalasi tambahan. GSAP dimuat dari CDN:
 - **Mandiri**: setiap contoh tidak bergantung pada file lain.
 - **Ringan**: animasi memakai `transform` dan `opacity` agar tetap halus.
 - **Responsif**: layout menyesuaikan lebar layar dan area aman perangkat (`safe-area-inset`).
-- **Ramah aksesibilitas**: teks alternatif untuk elemen dekoratif dan dukungan untuk pengguna yang mengaktifkan `prefers-reduced-motion` (direncanakan).
+- **Ramah aksesibilitas**: semua contoh menghormati `prefers-reduced-motion`. Pengguna yang mengaktifkan pengaturan ini akan melihat animasi berhenti atau langsung ke keadaan akhir.
 
 ## Kontribusi
 
