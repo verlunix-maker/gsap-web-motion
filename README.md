@@ -10,6 +10,11 @@ Setiap contoh bisa dilihat langsung di browser:
 |----------|--------|------|
 | Hero | Hero hutan pinus dengan latar blur | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-hutan-pinus.html) |
 | Hero | Hero high-tech dengan latar blur | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-high-tech.html) |
+| Hero | Hero power supply dengan jaringan tiang listrik | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-power-supply.html) |
+| Hero | Hero electricity dengan kilat yang berkedip | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-electricity.html) |
+| Hero | Hero farm dengan ladang gandum dan burung | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-farm.html) |
+| Hero | Hero ocean dengan gelombang berlapis | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-ocean.html) |
+| Hero | Hero city night dengan skyline dan hujan | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/hero/hero-city-night.html) |
 | Latar | Latar hutan pinus animasi (canvas + GSAP) | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/background/background-hutan-pinus.html) |
 | Aksen | Ranting dan daun pinus melayang | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/accents/aksen-ranting-pinus.html) |
 | Tombol | Efek magnet, ripple, dan tombol loading | [Buka demo](https://verlunix-maker.github.io/gsap-web-motion/buttons/tombol-gsap.html) |
@@ -25,6 +30,11 @@ Setiap contoh bisa dilihat langsung di browser:
 |----------|--------|--------|
 | Hero | Hero hutan pinus dengan latar blur | Tersedia |
 | Hero | Hero high-tech dengan latar blur | Tersedia |
+| Hero | Hero power supply | Tersedia |
+| Hero | Hero electricity | Tersedia |
+| Hero | Hero farm | Tersedia |
+| Hero | Hero ocean | Tersedia |
+| Hero | Hero city night | Tersedia |
 | Latar | Latar hutan pinus animasi (canvas + GSAP) | Tersedia |
 | Aksen | Ranting dan daun pinus melayang | Tersedia |
 | Tombol | Efek magnet, ripple, dan tombol loading | Tersedia |
@@ -38,7 +48,12 @@ Setiap contoh bisa dilihat langsung di browser:
 gsap-web-motion/
 ├── hero/
 │   ├── hero-hutan-pinus.html
-│   └── hero-high-tech.html
+│   ├── hero-high-tech.html
+│   ├── hero-power-supply.html
+│   ├── hero-electricity.html
+│   ├── hero-farm.html
+│   ├── hero-ocean.html
+│   └── hero-city-night.html
 ├── background/
 │   └── background-hutan-pinus.html
 ├── accents/
