@@ -10,8 +10,8 @@
 html,body{height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#fdf1c9;color:var(--ink)}
 .hero{position:relative;min-height:560px;height:min(100svh,840px);overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
-#bg{position:absolute;left:-40px;top:-40px;width:calc(100% + 80px);height:calc(100% + 80px);filter:blur(6px);z-index:0}
-.shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(255,250,235,.1),rgba(255,250,235,.55))}
+#bg{position:absolute;left:-40px;top:-40px;width:calc(100% + 80px);height:calc(100% + 80px);filter:blur(5px);z-index:0}
+.shade{linear-gradient(180deg,rgba(255,250,235,0),rgba(255,250,235,.25))}
 .content{position:relative;z-index:3;max-width:760px;background:rgba(255,255,255,.35);padding:32px;border-radius:24px;backdrop-filter:blur(4px)}
 .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);border:1px solid rgba(63,125,46,.4);padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.5)}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
@@ -28,6 +28,7 @@ h1 span{color:var(--green)}
 .stat b{display:block;font-size:24px;color:var(--green);font-variant-numeric:tabular-nums}
 .stat small{font-size:12px;color:#5a6b4a}
 @media (max-width:520px){.stats{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -81,28 +82,29 @@ function hill(base,amp,freq,ph,col){
 }
 function render(t){
   const sky=ctx.createLinearGradient(0,0,0,H);
-  sky.addColorStop(0,'#8fd3f4');sky.addColorStop(1,'#fdf1c9');
+  sky.addColorStop(0,'#7cc8f0');sky.addColorStop(1,'#fdf1c9');
   ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
   const sx=W*.8,sy=H*.22;
-  const sg=ctx.createRadialGradient(sx,sy,10,sx,sy,160);
-  sg.addColorStop(0,'rgba(255,236,150,1)');sg.addColorStop(1,'rgba(255,236,150,0)');
-  ctx.fillStyle=sg;ctx.fillRect(sx-160,sy-160,320,320);
-  ctx.beginPath();ctx.arc(sx,sy,34,0,6.283);ctx.fillStyle='#ffe27a';ctx.fill();
-  clouds.forEach(c=>{const x=((c.x+t*c.v)%(W+200))-100;cloud(x,c.y,c.s);});
-  hill(H*.62,18,.012,t*.05,'#a8d88a');
-  hill(H*.72,14,.02,t*.08+1,'#7fbf62');
-  ctx.fillStyle='#6fa84f';ctx.fillRect(0,H*.82,W,H);
+  const sg=ctx.createRadialGradient(sx,sy,10,sx,sy,180);
+  sg.addColorStop(0,'rgba(255,240,160,1)');sg.addColorStop(1,'rgba(255,240,160,0)');
+  ctx.fillStyle=sg;ctx.fillRect(sx-180,sy-180,360,360);
+  ctx.beginPath();ctx.arc(sx,sy,38,0,6.283);ctx.fillStyle='#ffe27a';ctx.fill();
+  clouds.forEach(c=>{const x=((c.x+t*c.v)%(W+200))-100;cloud(x,c.y,c.s*1.2);});
+  hill(H*.52,22,.008,t*.03,'#b9e39a');
+  hill(H*.64,18,.012,t*.05+.5,'#8fcb6f');
+  hill(H*.74,14,.02,t*.08+1,'#63a84f');
+  ctx.fillStyle='#4f9340';ctx.fillRect(0,H*.84,W,H);
   stalks.forEach(s=>{
     const top=H-s.h;
     const sway=Math.sin(t*1.4+s.ph+s.x*.02)*(5+s.d*2);
-    ctx.strokeStyle=s.d?'#c9a13a':'#b88c2a';ctx.lineWidth=1.4;
+    ctx.strokeStyle=s.d?'#e2b84a':'#c99a2e';ctx.lineWidth=1.8;
     ctx.beginPath();ctx.moveTo(s.x,H);ctx.quadraticCurveTo(s.x+sway*.3,H-s.h*.5,s.x+sway,top);ctx.stroke();
-    ctx.beginPath();ctx.ellipse(s.x+sway,top+4,2.2,5,sway*.02,0,6.283);ctx.fillStyle='#e0b54e';ctx.fill();
+    ctx.beginPath();ctx.ellipse(s.x+sway,top+4,2.6,6,sway*.02,0,6.283);ctx.fillStyle='#f0c25a';ctx.fill();
   });
   birds.forEach(b=>{
     const x=((b.x+t*b.v)%(W+60))-30,y=b.y+Math.sin(t*2+b.ph)*8,f=Math.sin(t*6+b.ph)*3;
-    ctx.beginPath();ctx.moveTo(x-8,y-f);ctx.lineTo(x,y);ctx.lineTo(x+8,y-f);
-    ctx.strokeStyle='#2f4f2a';ctx.lineWidth=1.6;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x-13,y-f);ctx.lineTo(x,y);ctx.lineTo(x+13,y-f);
+    ctx.strokeStyle='#1f3a22';ctx.lineWidth=3;ctx.stroke();
   });
 }
 resize();

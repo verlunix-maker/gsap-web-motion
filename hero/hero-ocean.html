@@ -10,8 +10,8 @@
 html,body{height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#041f33;color:var(--ink)}
 .hero{position:relative;min-height:560px;height:min(100svh,840px);overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
-#bg{position:absolute;left:-40px;top:-40px;width:calc(100% + 80px);height:calc(100% + 80px);filter:blur(7px);z-index:0}
-.shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(4,31,51,.25),rgba(4,31,51,.7))}
+#bg{position:absolute;left:-40px;top:-40px;width:calc(100% + 80px);height:calc(100% + 80px);filter:blur(5px);z-index:0}
+.shade{linear-gradient(180deg,rgba(4,31,51,.05),rgba(4,31,51,.5))}
 .content{position:relative;z-index:3;max-width:760px}
 .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--aqua);border:1px solid rgba(111,227,255,.35);padding:7px 14px;border-radius:999px;background:rgba(111,227,255,.06)}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--aqua)}
@@ -28,6 +28,7 @@ h1 span{color:var(--aqua)}
 .stat b{display:block;font-size:24px;color:var(--aqua);font-variant-numeric:tabular-nums}
 .stat small{font-size:12px;color:#8fbfd1}
 @media (max-width:520px){.stats{grid-template-columns:1fr}}
+.content h1,.content .lead{text-shadow:0 2px 18px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
@@ -65,36 +66,36 @@ function resize(){
   bubbles=Array.from({length:18},()=>({x:rnd(0,W),y0:rnd(0,H),v:rnd(20,50),r:rnd(2,6),sw:rnd(4,12),ph:rnd(0,6.3)}));
 }
 const LAYERS=[
-  {base:.42,amp:12,spd:.6,ph:0,col:'rgba(40,160,200,.25)'},
-  {base:.55,amp:18,spd:.85,ph:1.3,col:'rgba(30,130,180,.35)'},
-  {base:.68,amp:24,spd:1.1,ph:2.6,col:'rgba(15,90,140,.5)'},
-  {base:.82,amp:30,spd:1.4,ph:3.9,col:'rgba(8,60,100,.7)'}
+  {base:.42,amp:14,spd:.6,ph:0,col:'rgba(70,200,230,.4)'},
+  {base:.55,amp:20,spd:.85,ph:1.3,col:'rgba(45,170,210,.55)'},
+  {base:.68,amp:26,spd:1.1,ph:2.6,col:'rgba(25,130,180,.7)'},
+  {base:.82,amp:32,spd:1.4,ph:3.9,col:'rgba(12,85,130,.85)'}
 ];
 function render(t){
   const sky=ctx.createLinearGradient(0,0,0,H);
-  sky.addColorStop(0,'#0b3d5c');sky.addColorStop(1,'#041f33');
+  sky.addColorStop(0,'#0e4a6e');sky.addColorStop(1,'#03182a');
   ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
   const sx=W*.72,sy=H*.12;
-  const sg=ctx.createRadialGradient(sx,sy,8,sx,sy,140);
-  sg.addColorStop(0,'rgba(255,240,190,.9)');sg.addColorStop(1,'rgba(255,240,190,0)');
-  ctx.fillStyle=sg;ctx.fillRect(sx-140,sy-140,280,280);
+  const sg=ctx.createRadialGradient(sx,sy,8,sx,sy,160);
+  sg.addColorStop(0,'rgba(255,240,190,.95)');sg.addColorStop(1,'rgba(255,240,190,0)');
+  ctx.fillStyle=sg;ctx.fillRect(sx-160,sy-160,320,320);
   sparkles.forEach(s=>{
-    const a=.3+.5*Math.sin(t*2+s.ph);
-    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.283);ctx.fillStyle='rgba(255,255,255,'+a+')';ctx.fill();
+    const a=.35+.55*Math.sin(t*2+s.ph);
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r*1.3,0,6.283);ctx.fillStyle='rgba(255,255,255,'+a+')';ctx.fill();
   });
   LAYERS.forEach(L=>{
-    ctx.beginPath();ctx.moveTo(0,H);
-    for(let x=0;x<=W;x+=8){
-      const y=H*L.base+Math.sin(x*.012+t*L.spd+L.ph)*L.amp+Math.sin(x*.027-t*L.spd*1.6)*L.amp*.35;
-      ctx.lineTo(x,y);
-    }
-    ctx.lineTo(W,H);ctx.closePath();ctx.fillStyle=L.col;ctx.fill();
+    const pts=[];
+    for(let x=0;x<=W;x+=8)pts.push([x,H*L.base+Math.sin(x*.012+t*L.spd+L.ph)*L.amp+Math.sin(x*.027-t*L.spd*1.6)*L.amp*.35]);
+    ctx.beginPath();ctx.moveTo(0,H);pts.forEach(p=>ctx.lineTo(p[0],p[1]));ctx.lineTo(W,H);ctx.closePath();
+    ctx.fillStyle=L.col;ctx.fill();
+    ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+    ctx.strokeStyle='rgba(210,248,255,.5)';ctx.lineWidth=1.5;ctx.stroke();
   });
   bubbles.forEach(b=>{
     const y=H-((b.y0+t*b.v)%H);
     const x=b.x+Math.sin(t*1.5+b.ph)*b.sw;
-    ctx.beginPath();ctx.arc(x,y,b.r,0,6.283);
-    ctx.strokeStyle='rgba(200,240,255,.5)';ctx.lineWidth=1.2;ctx.stroke();
+    ctx.beginPath();ctx.arc(x,y,b.r*1.2,0,6.283);
+    ctx.strokeStyle='rgba(220,248,255,.7)';ctx.lineWidth=1.5;ctx.stroke();
   });
 }
 resize();
